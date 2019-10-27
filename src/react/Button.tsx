@@ -9,6 +9,9 @@ function Button(props: IButtonProps) {
   return (
     <div
       className={style({
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         background: "#0000ff",
         padding: "12px 24px",
         color: "white",
