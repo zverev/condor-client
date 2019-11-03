@@ -9,20 +9,19 @@ export default class Influxdb {
   }
 
   registerUnloadEvent() {
-      var _self = this;
       //need both events to work in chrome http://stackoverflow.com/a/20322988/1368683
-      window.addEventListener('unload', function (e) {
-          _self.sendBeacon(_self);
+      window.addEventListener('unload', (e) => {
+          this.sendBeacon(this);
       }, false);
-      window.onbeforeunload = function (e) {
-          _self.sendBeacon(_self);
+      window.onbeforeunload = (e) => {
+          this.sendBeacon(this);
       };
   }
 
   sendBeacon(_self) {
       //need this polyfill https://github.com/miguelmota/Navigator.sendBeacon
       if (_self.beaconSent) return;
-      if (_self.points && _self.points.length == 0) return;
+      if (_self.points && _self.points.length === 0) return;
       _self.beaconSent = true;
       if (!navigator && !navigator.sendBeacon) return;
       var data = _self.implodePoints();
@@ -41,7 +40,7 @@ export default class Influxdb {
   }
 
   implodePoints() {
-      if (this.points.length == 0) return '';
+      if (this.points.length === 0) return '';
       var index, data = '';
       for (index = 0; index < this.points.length; ++index) {
           if (!this.points[index].isValid()) {
@@ -54,7 +53,7 @@ export default class Influxdb {
   }
 
   send() {
-      if (this.points.length == 0) return false;
+      if (this.points.length === 0) return false;
       var data = this.implodePoints();
       if (data) {
           var request = new XMLHttpRequest();
@@ -117,7 +116,7 @@ class Influxdb_Point {
       var key, value;
       //Tags should be sorted by key before being sent for best performance https://docs.influxdata.com/influxdb/v0.13/write_protocols/line/#key
       obj = this.sortObjectByKey(obj);
-      for (var key in obj) {
+      for (key in obj) {
           if (obj.hasOwnProperty(key)) {
               //todo: right now not supporting space in tags where it should be support with back slash
               key = key.replace(/\s+/g, '');
