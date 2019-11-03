@@ -1,6 +1,18 @@
 {
-  "1": "SINGLE_EVENT",
-  "2": "SINGLE_EVENT",
-  "3": "PERCENTAGE",
-  "4": "GEOLOCATION"
+  "1": {
+    "type": "SINGLE_EVENT",
+    "label": "Drinked a beer"
+  },
+  "2": {
+    "type": "SINGLE_EVENT",
+    "label": "Smoked weed"
+  },
+  "3": {
+    "type": "PERCENTAGE",
+    "label": "My mood"
+  },
+  "4": {
+    "type": "GEOLOCATION",
+    "label": "My location"
+  }
 }

@@ -1,8 +1,9 @@
 import React from "react";
 import Button from "../Button";
+import IPointTypeComponentProps from "./IPointTypeComponentProps";
 
-const SingleEvent = () => (
-  <Button color="#0000ff" label="Single Event" onClick={() => console.log("SingleEvent clicked")} />
+const SingleEvent = ({ label }: IPointTypeComponentProps) => (
+  <Button color="#0000ff" label={label} onClick={() => console.log("SingleEvent clicked")} />
 );
 
 export default SingleEvent;

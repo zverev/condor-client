@@ -12,8 +12,12 @@ import SingleEvent from "./PointTypeComponents/SingleEvent";
 import Percentage from "./PointTypeComponents/Percentage";
 import Geolocation from "./PointTypeComponents/Geolocation";
 
+interface PointProperties {
+  type: string;
+  label: string;
+}
 interface IUserConfig {
-  [pointId: string]: string;
+  [pointId: string]: PointProperties;
 }
 const userConfigTyped: IUserConfig = userConfig;
 
@@ -38,13 +42,14 @@ function App() {
         })}
       >
         {Object.keys(userConfig).map(pointId => {
-          switch (userConfigTyped[pointId]) {
+          const { type, label } = userConfigTyped[pointId]
+          switch (type) {
             case POINT_TYPE_SINGLE_EVENT:
-              return <SingleEvent />;
+              return <SingleEvent key={pointId} label={label} />;
             case POINT_TYPE_PERCENTAGE:
-              return <Percentage />;
+              return <Percentage key={pointId} label={label} />;
             case POINT_TYPE_GEOLOCATION:
-              return <Geolocation />;
+              return <Geolocation key={pointId} label={label} />;
             default:
               throw new Error(`Unknown point type ${userConfigTyped[pointId]}`);
           }
