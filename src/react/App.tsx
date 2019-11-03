@@ -2,11 +2,18 @@ import React from "react";
 import { style } from "typestyle";
 import * as csstips from "csstips";
 import InfluxDBClient from "../influxdb";
-import Button from "./Button";
 import userConfig from "../user-config.json";
+import {
+  POINT_TYPE_GEOLOCATION,
+  POINT_TYPE_SINGLE_EVENT,
+  POINT_TYPE_PERCENTAGE
+} from "../points";
+import SingleEvent from "./PointTypeComponents/SingleEvent";
+import Percentage from "./PointTypeComponents/Percentage";
+import Geolocation from "./PointTypeComponents/Geolocation";
 
 interface IUserConfig {
-  [key: string]: string;
+  [pointId: string]: string;
 }
 const userConfigTyped: IUserConfig = userConfig;
 
@@ -30,15 +37,18 @@ function App() {
           }
         })}
       >
-        {Object.keys(userConfig).map(key => (
-          <Button
-            title={userConfigTyped[key]}
-            onClick={() => {
-              client.point("key", { value: 1 }, { tag: "tag_name" });
-              client.send();
-            }}
-          />
-        ))}
+        {Object.keys(userConfig).map(pointId => {
+          switch (userConfigTyped[pointId]) {
+            case POINT_TYPE_SINGLE_EVENT:
+              return <SingleEvent />;
+            case POINT_TYPE_PERCENTAGE:
+              return <Percentage />;
+            case POINT_TYPE_GEOLOCATION:
+              return <Geolocation />;
+            default:
+              throw new Error(`Unknown point type ${userConfigTyped[pointId]}`);
+          }
+        })}
       </div>
     </div>
   );

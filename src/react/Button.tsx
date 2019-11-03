@@ -2,7 +2,8 @@ import React from "react";
 import { style } from "typestyle";
 
 interface IButtonProps {
-  title: string;
+  color: string;
+  label: string;
   onClick: () => void;
 }
 function Button(props: IButtonProps) {
@@ -16,10 +17,11 @@ function Button(props: IButtonProps) {
         padding: "12px 24px",
         color: "white",
         cursor: "pointer",
+        backgroundColor: props.color,
       })}
       onClick={props.onClick}
     >
-      {props.title}
+      {props.label}
     </div>
   )
 }
