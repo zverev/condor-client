@@ -11,7 +11,7 @@ import {
 import SingleEvent from "./PointTypeComponents/SingleEvent";
 import Percentage from "./PointTypeComponents/Percentage";
 import Geolocation from "./PointTypeComponents/Geolocation";
-import { createDropboxAuthUrl } from "../authorization";
+import {createDropboxAuthPageUrl, extractAccessTokenFromUrl} from "../authorization";
 
 interface PointProperties {
   type: string;
@@ -27,23 +27,27 @@ const client = new InfluxDBClient(
   false
 );
 
-class App extends React.Component<{}, {}> {
+interface IAppState {
+  accessToken: string;
+}
+class App extends React.Component<{}, IAppState> {
+  state = { accessToken: "" }
+
   componentDidMount(): void {
     if (!window.location.hash) {
-      window.location.href = createDropboxAuthUrl();
+      window.location.href = createDropboxAuthPageUrl();
     }
+    this.setState({
+      accessToken: extractAccessTokenFromUrl()
+    });
   }
 
   render() {
-    if (window.location.hash) {
+    if (!this.state.accessToken) {
       return (
-        <div>{window.location.hash}</div>
+        <div>Loading</div>
       );
     }
-
-    return (
-      <div>Loading</div>
-    );
 
     return (
       <div className={style(csstips.fillParent, csstips.centerCenter)}>
