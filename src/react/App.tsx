@@ -11,6 +11,7 @@ import {
 import SingleEvent from "./PointTypeComponents/SingleEvent";
 import Percentage from "./PointTypeComponents/Percentage";
 import Geolocation from "./PointTypeComponents/Geolocation";
+import { createDropboxAuthUrl } from "../authorization";
 
 interface PointProperties {
   type: string;
@@ -26,37 +27,55 @@ const client = new InfluxDBClient(
   false
 );
 
-function App() {
-  return (
-    <div className={style(csstips.fillParent, csstips.centerCenter)}>
-      <div
-        className={style({
-          display: "flex",
-          flexDirection: "column",
-          minWidth: "200px",
-          $nest: {
-            "&>*": {
-              marginBottom: "8px"
+class App extends React.Component<{}, {}> {
+  componentDidMount(): void {
+    if (!window.location.hash) {
+      window.location.href = createDropboxAuthUrl();
+    }
+  }
+
+  render() {
+    if (window.location.hash) {
+      return (
+        <div>{window.location.hash}</div>
+      );
+    }
+
+    return (
+      <div>Loading</div>
+    );
+
+    return (
+      <div className={style(csstips.fillParent, csstips.centerCenter)}>
+        <div
+          className={style({
+            display: "flex",
+            flexDirection: "column",
+            minWidth: "200px",
+            $nest: {
+              "&>*": {
+                marginBottom: "8px"
+              }
             }
-          }
-        })}
-      >
-        {Object.keys(userConfig).map(pointId => {
-          const { type, label } = userConfigTyped[pointId]
-          switch (type) {
-            case POINT_TYPE_SINGLE_EVENT:
-              return <SingleEvent key={pointId} label={label} />;
-            case POINT_TYPE_PERCENTAGE:
-              return <Percentage key={pointId} label={label} />;
-            case POINT_TYPE_GEOLOCATION:
-              return <Geolocation key={pointId} label={label} />;
-            default:
-              throw new Error(`Unknown point type ${userConfigTyped[pointId]}`);
-          }
-        })}
+          })}
+        >
+          {Object.keys(userConfig).map(pointId => {
+            const {type, label} = userConfigTyped[pointId]
+            switch (type) {
+              case POINT_TYPE_SINGLE_EVENT:
+                return <SingleEvent key={pointId} label={label}/>;
+              case POINT_TYPE_PERCENTAGE:
+                return <Percentage key={pointId} label={label}/>;
+              case POINT_TYPE_GEOLOCATION:
+                return <Geolocation key={pointId} label={label}/>;
+              default:
+                throw new Error(`Unknown point type ${userConfigTyped[pointId]}`);
+            }
+          })}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default App;
